@@ -27,6 +27,11 @@
 		},
 		results : {
 			id: 'ds_results'
+		},
+		keys : {
+			focusSearch: 70, // f
+			blurSearch : 27, // esc
+			navigateToResult : 13 // enter
 		}
 	};
 
@@ -83,20 +88,20 @@
 				}
 				$results.html(links);
 
-				/* ENTER -> Move to first search result. */
+				/* Navigate to first search result. (Default = ENTER) */
 				var key = event.keyCode || event.which;
-				if (key === 13) {
+				if (key === settings.keys.navigateToResult) {
 				  $results.find('a:first').click();
 				}
 				
-				/* ESC -> Blur the search field to allow normal keyboard navigation. */
-				else if (key === 27) {
+				/* Blur the search field to allow normal keyboard navigation. (Default = ESC) */
+				else if (key === settings.keys.blurSearch) {
 				  $(this).blur();
 				}
 			})
+			/* Empty results, when the "empty this input" -icon in search field is clicked. */
 			.bind('click', function() {
 				if (!$(this).val().length) {
-					/* Empty results, when the "empty this input" -icon in search field is clicked. */
 					$results.empty();
 				}
 			})
@@ -109,10 +114,10 @@
 			.appendTo($cont);
 
 
-		/* F-key -> Focus search field. */
+		/* Focus search field. (Default = f) */
 		$d.bind('keyup.decksearch', function() {
 			var key = event.keyCode || event.which;
-			if (key === 70) {
+			if (key === settings.keys.focusSearch) {
 				$input.focus();
 			}
 		});
