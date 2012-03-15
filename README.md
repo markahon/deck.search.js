@@ -5,7 +5,6 @@ Simple extension for [deck.js][] for searching content
 ## Requirements ##
 
 * Well, [deck.js][]
-* Uses also the [deck-goto][]-extension
 
 ## How to install ##
 
@@ -17,5 +16,4 @@ Insert the following line at the end of your HTML `body`.
 
 	<script src="../extensions/search/deck.search.js"></script>
 
-[deck.js]: https://github.com/imakewebthings/deck.js
-[deck-goto]: http://imakewebthings.com/deck.js/docs/#deck-goto
+[deck.js]: https://github.com/imakewebthings/deck.jsa
