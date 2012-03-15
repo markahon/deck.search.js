@@ -1,5 +1,5 @@
 /**
- * Search feature for jQuery.deck (http://imakewebthings.com/deck.js/).
+ * Search feature for deck.js jQuery-plugin (http://imakewebthings.com/deck.js/).
  * @author markahon@github
  */
 (function($, deck) {
@@ -156,5 +156,3 @@
 	$d.bind('deck.init', showSearch);
 	
 })(jQuery, 'deck');
-
-//$.deck('showSearch');
