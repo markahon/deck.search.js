@@ -1,6 +1,6 @@
 # deck.search.js #
 
-Simple extension for [deck.js][] for searching content
+Simple extension for [deck.js][] for searching content from the slides.
 
 ## Requirements ##
 
