@@ -16,4 +16,4 @@ Insert the following line at the end of your HTML `body`.
 
 	<script src="../extensions/search/deck.search.js"></script>
 
-[deck.js]: https://github.com/imakewebthings/deck.jsa
+[deck.js]: https://github.com/imakewebthings/deck.js
