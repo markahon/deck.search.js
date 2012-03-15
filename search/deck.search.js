@@ -26,7 +26,8 @@
 			hint: "Press ' f ' to search"
 		},
 		results : {
-			id: 'ds_results'
+			id: 'ds_results',
+			hitsStyle: 'font-style: italic; font-size: 80%; color: #888;'
 		},
 		keys : {
 			focusSearch: 70, // f
@@ -43,7 +44,8 @@
 		$d.unbind('.decksearch');
 		if ($cont) {
 			$cont.remove();
-		}		
+		}
+		$('#'+defaults.container.id).remove();
 	}
 
 
@@ -77,16 +79,23 @@
 				
 				/* Search and display results */
 				var searchString = $(this).val();
-				var links = "";
+				var links = [];
 				if (searchString.length) {	
-					var regex = new RegExp(searchString, 'im');
+					var regex = new RegExp(searchString, 'img');
 					$('section.slide').each(function(i,n) {
-						if ($(this).text().search(regex) > -1) {
-							links += ['<div id="result',i,'">','<a href="#', this.id ,'">', 'Jump to #'+this.id ,'</a>', '</div>'].join('');
+						var hits = $(this).text().match(regex);
+						if (hits) {
+							links.push([
+								'<div id="result', i , '">',
+									'<a href="#', this.id ,'">', 'Jump to #', this.id , '</a> ',
+									'<span style="',settings.results.hitsStyle,'">(', hits.length, ' hits)</span>',
+								'</div>'
+								].join('')
+							);
 						}
 					});
 				}
-				$results.html(links);
+				$results.html(links.join(''));
 
 				/* Navigate to first search result. (Default = ENTER) */
 				var key = event.keyCode || event.which;
