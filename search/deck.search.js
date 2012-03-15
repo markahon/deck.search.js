@@ -8,6 +8,7 @@
 
 	/* Default settings. */
 	var defaults = {
+		useGo: false,
 		container : {
 			id: 'ds_container',
 			style: {
@@ -82,14 +83,13 @@
 				var links = [];
 				if (searchString.length) {	
 					var regex = new RegExp(searchString, 'img');
-					$('section.slide').each(function(i,n) {
+					$('.slide').each(function(i,n) {
 						var hits = $(this).text().match(regex);
 						if (hits) {
 							links.push([
-								'<div id="result', i , '">',
-									'<a href="#', this.id ,'">', 'Jump to #', this.id , '</a> ',
-									'<span style="',settings.results.hitsStyle,'">(', hits.length, ' hits)</span>',
-								'</div>'
+								'<a id="result', i , '" href="#', this.id ,'">', 'Jump to #', this.id , '</a> ',
+								'<span style="',settings.results.hitsStyle,'">(', hits.length, ' hit', (hits.length > 1 ? 's' : ''), ')</span>',
+								'<br>'
 								].join('')
 							);
 						}
@@ -135,20 +135,21 @@
 
 		/* Init results list. */
 		$results = $('<div id="'+settings.results.id+'" />')
-			/*
-			// Navigate the deck when clicking on result-link.
-			// This was initially a fallback to use deck-goto-extension. Works if slides are numbered, but not needed if deck.js core 'hashchange' event handling works.
+			// Navigate the deck when clicking on result-link using the deck.core 'go'-function.
+			// It seems, that without 'go' the page can get messed up more easily in some slideshows?
 			.delegate('a', 'click keyup keydown keypress', function() {
+				if (!settings.useGo) {
+					return;
+				}
 				var key = event.keyCode || event.which;
 				if (key && key != 13 && key != 32) {
 					// Key pressed, but it wasn't ENTER or SPACE, let them pass through normally.
 					return;
 				}
-				var index = $(this).text().match(/\d*$/)[0];
+				var index = this.id.match(/\d*$/)[0];
 				$.deck('go', parseInt(index, 10) );
 				return false;
 			})
-			*/
 			.appendTo($cont);
 
 
