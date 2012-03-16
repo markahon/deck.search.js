@@ -9,7 +9,7 @@
 
 	/* Default settings for deck.search.js */
 	var defaults = {
-		useGo: false,
+		useGo: true,
 		container : {
 			id: 'ds_container',
 			style: {
@@ -138,19 +138,35 @@
 
 		/* Init results list. */
 		$results = $('<div id="'+settings.results.id+'" />')
-			// Navigate the deck when clicking on result-link using the deck.core 'go'-function.
-			// It seems, that without 'go' the page can get messed up more easily in some slideshows?
-			.delegate('a', 'click keyup keydown keypress', function() {
-				if (!settings.useGo) {
-					return;
+			.delegate('a', 'click', function() {
+				console.log('click ', this);
+				if (settings.useGo) {
+					// Navigate the deck when clicking on result-link using the deck.core 'go'-function.
+					// It seems, that without 'go' the page can get messed up more easily in some slideshows?
+					var index = this.id.match(/\d*$/)[0];
+					$.deck('go', parseInt(index, 10) );
+					return false;
 				}
-				var key = event.keyCode || event.which;
+			})
+			.delegate('a', 'keyup keydown keypress', function() {
+				var key = event.keyCode || event.which;			
 				if (key && key != 13 && key != 32) {
 					// Key pressed, but it wasn't ENTER or SPACE, let them pass through normally.
 					return;
 				}
-				var index = this.id.match(/\d*$/)[0];
-				$.deck('go', parseInt(index, 10) );
+
+				// Stop event propagation from the results not to get mixed with normal deck navigation.... */
+				event.stopPropagation();
+
+				// ... but do something only on keyup events.
+				if (event.type !== 'keyup') {
+					return;
+				}
+
+				// Handle keyup as click. Note, that this simple approach doesn't work if not using 'go'.
+				// That's because space/enter on links won't be handled as they normally would in browsers (deck.core probably stops them).
+				// We would have to simulate "real" mouse click, see e.g. http://stackoverflow.com/questions/1421584/how-can-i-simulate-a-click-to-an-anchor-tag.
+				$(this).click();
 				return false;
 			})
 			.appendTo($cont);
