@@ -56,7 +56,7 @@
 	function showSearch(options) {
 		var $input, $results;
 		
-		var settings = $.extend({}, defaults, options);
+		var settings = $.extend(true, defaults, options);
 	
 		/* Remove any previous instances and re-initialize, if running this function again for some reason. */
 		removeSearch();
