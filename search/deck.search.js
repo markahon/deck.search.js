@@ -5,10 +5,17 @@
 (function($, deck) {
 	var $d = $(document), $cont;
 
+	/*
+	  TODOS:
+	  * Refactor style hacking to CSS-files
+	  * Simplify and refactor for better code readability
+	*/
+
 	var searchSettings = 'search';
 
 	/* Default settings for deck.search.js */
 	var defaults = {
+		slideTitleSelectors: 'header, h1, h2, h3, h4',
 		useGo: true,
 		container : {
 			target: 'body',
@@ -28,7 +35,7 @@
 				background: '#fff',
 				border: '1px solid #aaa',
 				'border-left': 'none',
-				'border-top': 'none'
+				'border-top': 'none'	
 			}
 		},
 		input : {
@@ -36,7 +43,7 @@
 			hint: "Hint: shortcut = ' f '",
 			styleInactive: {
 				//outline: '1px solid transparent',
-				width: '2.1em'
+				width: '3.1em'
 			},
 			styleActive: {
 				outline: 'none',
@@ -45,6 +52,7 @@
 		},
 		results : {
 			id: 'ds_results',
+			resultClass: 'searchResult',
 			hitsStyle: 'font-style: italic; font-size: 80%; color: #888;'
 		},
 		keys : {
@@ -117,9 +125,24 @@
 				if (searchString.length) {	
 					var regex = new RegExp(searchString, 'img');
 					$('.slide').each(function(i,n) {
-						var hits = $(this).text().match(regex);
+						var $slide = $(this);
+						var hits = $slide.text().match(regex);
 						if (hits || i === parseInt(searchString, 10)) {
-							var details;
+							var title = "", details = "", resultStyle = "";
+
+							var $parentSlide = $slide.parent().closest('.slide');
+
+							if (!$parentSlide.length) {
+								resultStyle = 'margin: 0.5em 0 0;'
+								// Show title of main slides
+								title = $slide.children(settings.slideTitleSelectors).first().text();
+								if (title.length > 25) {
+									title = title.substring(0, 22) + "...";
+								}
+							} else {
+								// Small indent for child-slides in result list
+								resultStyle += 'margin: 0 0 0 0.5em;';
+							}
 
 							if (hits) {
 								details = ['(', hits.length, ' hit', (hits.length > 1 ? 's' : ''), ')'].join('');
@@ -128,9 +151,10 @@
 							}
 
 							links.push([
-								'<a id="result', i , '" href="#', this.id ,'">', '#', this.id , '</a> ',
-								'<span style="', settings.results.hitsStyle,'">', details, '</span>',
-								'<br>'
+								'<div class="', settings.results.resultClass, '" style="', resultStyle ,'">',
+									'<a id="result', i , '" href="#', this.id ,'"><span style="font-weight: bold;">', title, '</span>', (title ? '<br>' : ''), '#', this.id , '</a> ',
+									'<span style="', settings.results.hitsStyle,'">', details, '</span>',
+								'</div>'
 								].join('')
 							);
 						}
@@ -165,7 +189,7 @@
 
 
 		/* Focus search field. (Default = f) */
-		$d.bind('keyup.decksearch', function() {
+		$d.bind('keyup.decksearch', function(event) {
 			var key = event.keyCode || event.which;
 			if (key === settings.keys.focusSearch) {
 				$input.removeAttr('placeholder');
@@ -186,7 +210,7 @@
 					return false;
 				}
 			})
-			.delegate('a', 'keyup keydown keypress', function() {
+			.delegate('a', 'keyup keydown keypress', function(event) {
 				var key = event.keyCode || event.which;			
 				if (key && key != 13 && key != 32) {
 					// Key pressed, but it wasn't ENTER or SPACE, let them pass through normally.
@@ -208,7 +232,7 @@
 				return false;
 			})
 			/* Hide results if ESC is pressed when focused on results. */
-			.bind('keyup', function() {
+			.bind('keyup', function(event) {
 				var key = event.keyCode || event.which;	
 				if (key === settings.keys.blurSearch) {
 					$input.val('').trigger('click');
