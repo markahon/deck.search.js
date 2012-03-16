@@ -11,15 +11,17 @@
 	var defaults = {
 		useGo: true,
 		container : {
+			target: '.deck-container',
 			id: 'ds_container',
 			style: {
 				position: 'fixed',
-				top: 0,
+				top: '0.2em',
 				/* top right corner would be nicer, but it messes up the $.deck display */
-				left: 0,
+				left: '0.2em',
 				background: '#fff',
-				border: '1px solid black',
-				padding: '1em',
+				border: '1px solid #aaa',
+				padding: '0.6em',
+				'font-size': '12pt',
 				'z-index': '10'
 			}
 		},
@@ -181,7 +183,7 @@
 
 
 		/* Add search-box to document. */
-		$cont.appendTo(document.body);
+		$cont.appendTo(settings.container.target);
 	}
 
 
@@ -191,5 +193,10 @@
 
 	/* Initialize search on deck initialization by default. */
 	$d.bind('deck.init', showSearch);
+
+	$(function() {
+		// Pick same font-family as used in slide titles.
+		$.extend(true, $.deck.defaults.search.container.style, {'font-family' : $('.slide:first').css('font-family')});
+	});
 	
 })(jQuery, 'deck');
