@@ -1,6 +1,6 @@
 /**
- * Search feature for deck.js jQuery-plugin (http://imakewebthings.com/deck.js/).
- * @author markahon@github
+ * Search feature extension for deck.js HTML Presentations jQuery-plugin (http://imakewebthings.com/deck.js/).
+ * @author Markus Ahonen, https://github.com/markahon
  */
 (function($, deck) {
 	var $d = $(document), $cont;
@@ -39,15 +39,22 @@
 				'border-top': 'none'	
 			}
 		},
+		hint: {
+			id: 'ds_hint',
+			text: "(Hint: Press 'F' to search)",
+			style: {
+				'font-style': 'italic',
+				color: '#888'
+			}
+		},
 		input : {
 			id: 'ds_input',
-			hint: "Hint: shortcut = ' f '",
 			styleInactive: {
 				//outline: '1px solid transparent',
-				width: '3.1em'
+				width: '3.3em'
 			},
 			styleActive: {
-				outline: 'none',
+				outline: 'none', // TODO fix search box jumping in chrome
 				width: 'auto'
 			}
 		},
@@ -82,7 +89,7 @@
 	  Show the search box.
 	*/
 	function showSearch(options) {
-		var $input, $results;
+		var $hint, $input, $results;
 
 		var settings = $.extend(true, $[deck].defaults[searchSettings], options);
 	
@@ -94,11 +101,14 @@
 		$cont = $('<div id="'+settings.container.id+'" />')
 			.css(settings.container.styleDefault)
 			.bind('focusin', function() {
+				if ($hint) {
+					$hint.remove();
+					$hint = null;
+				}
 				$input.css(settings.input.styleActive);
 			})
 			.bind('focusout', function() {
 				$input.removeAttr('placeholder');
-					//.attr('placeholder', settings.input.hint)
 				if (!$results.html()) {
 					$input.css(settings.input.styleInactive);
 					$cont.css(settings.container.styleDefault);
@@ -106,9 +116,14 @@
 			});
 		
 
+		/* Add hint text. */
+		$hint = $('<div id="'+settings.hint.id+'">'+settings.hint.text+'</div>')
+			.css(settings.hint.style)
+			.appendTo($cont);
+
 
 		/* Init search box. */
-		$input = $('<input id="'+settings.input.id+'" type="search" results="5" autocomplete="on" placeholder="'+settings.input.hint+'" />')
+		$input = $('<input id="'+settings.input.id+'" type="search" results="5" autocomplete="on" placeholder="Search..." />')
 			.css(settings.input.styleInactive)
 			/* Handle events related to search-field. */
 			.bind('keyup keydown keypress', function(event) {

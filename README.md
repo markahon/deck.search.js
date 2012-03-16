@@ -1,6 +1,6 @@
 # deck.search.js #
 
-Simple extension for [deck.js][] to search content from the slides.
+Simple extension for [deck.js][] HTML Presentations jQuery-plugin, to search content from the slides.
 
 ## Features
 
