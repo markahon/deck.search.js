@@ -40,11 +40,15 @@
 			}
 		},
 		hint: {
+			show: true,
 			id: 'ds_hint',
 			text: "(Hint: Press 'F' to search)",
 			style: {
 				'font-style': 'italic',
-				color: '#888'
+				color: '#000',
+				background: '#fff',
+				opacity: '0.5',
+				padding: '0.2em'
 			}
 		},
 		input : {
@@ -117,9 +121,11 @@
 		
 
 		/* Add hint text. */
-		$hint = $('<div id="'+settings.hint.id+'">'+settings.hint.text+'</div>')
-			.css(settings.hint.style)
-			.appendTo($cont);
+		if (settings.hint.show) {
+			$hint = $('<div id="'+settings.hint.id+'">'+settings.hint.text+'</div>')
+				.css(settings.hint.style)
+				.appendTo($cont);
+		}
 
 
 		/* Init search box. */
