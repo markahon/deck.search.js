@@ -8,13 +8,13 @@ Simple extension for [deck.js][] to search content from the slides.
 
 ## How to install ##
 
-Copy the `search` folder to your deck.js `extensions` folder.
+1. Download the files.
 
-## How to use ##
+2. Copy the `search` folder to your deck.js `extensions` folder.
 
-Insert the following line at the end of your HTML `body`.
+3. Insert the following line at the end of your HTML `body`.
 
-	<script src="../extensions/search/deck.search.js"></script>
+		<script src="../extensions/search/deck.search.js"></script>
 
 ### Advanced use
 You can include additional script to alter default settings. Simple example below:
