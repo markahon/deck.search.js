@@ -94,7 +94,7 @@
 							if (hits) {
 								details = ['(', hits.length, ' hit', (hits.length > 1 ? 's' : ''), ')'].join('');
 							} else {
-								details = '(slide number '+i+')';
+								details = '(slide #'+i+')';
 							}
 
 							links.push([
