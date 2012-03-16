@@ -5,8 +5,9 @@
 (function($, deck) {
 	var $d = $(document), $cont;
 
+	var searchSettings = 'search';
 
-	/* Default settings. */
+	/* Default settings for deck.search.js */
 	var defaults = {
 		useGo: false,
 		container : {
@@ -36,7 +37,9 @@
 			navigateToResult : 13 // enter
 		}
 	};
-
+	// Make deck.search-defaults visible in deck.core-defaults
+	$[deck].defaults[searchSettings] = {};
+	$.extend(true, $[deck].defaults[searchSettings], defaults);
 
     /*
 	  Remove the search box.
@@ -55,8 +58,8 @@
 	*/
 	function showSearch(options) {
 		var $input, $results;
-		
-		var settings = $.extend(true, defaults, options);
+
+		var settings = $.extend(true, $[deck].defaults[searchSettings], options);
 	
 		/* Remove any previous instances and re-initialize, if running this function again for some reason. */
 		removeSearch();
@@ -161,7 +164,7 @@
 	/* Extend deck.js */
 	$[deck]('extend', 'showSearch', showSearch);
 	$[deck]('extend', 'removeSearch', removeSearch);
-	
+
 	/* Initialize search on deck initialization by default. */
 	$d.bind('deck.init', showSearch);
 	

@@ -1,6 +1,6 @@
 # deck.search.js #
 
-Simple extension for [deck.js][] for searching content from the slides.
+Simple extension for [deck.js][] to search content from the slides.
 
 ## Requirements ##
 
@@ -15,5 +15,12 @@ Copy the `search` folder to your deck.js `extensions` folder.
 Insert the following line at the end of your HTML `body`.
 
 	<script src="../extensions/search/deck.search.js"></script>
+
+### Advanced use
+You can include additional script to alter default settings. Simple example below:
+
+	<script>
+		$.extend(true, $.deck.defaults.search.input, {id : 'search_input'});
+	</script>
 
 [deck.js]: https://github.com/imakewebthings/deck.js
