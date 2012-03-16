@@ -29,7 +29,8 @@
 				border: 'none',
 				padding: '0.4em',
 				'font-size': '12pt',
-				'z-index': '10'
+				'z-index': '10',
+				overflow: 'auto'
 			},
 			styleWithResults : {
 				background: '#fff',
@@ -166,7 +167,10 @@
 				}
 				var resultsHTML = links.join('');
 				$cont.css(resultsHTML ? settings.container.styleWithResults : settings.container.styleDefault);
+				$cont.css({'max-height': $(window).height()});
+
 				$results.html(resultsHTML);
+				
 
 				/* Navigate to first search result. (Default = ENTER) */
 				var key = event.keyCode || event.which;
@@ -241,6 +245,10 @@
 			})
 			.appendTo($cont);
 
+		/* Handle scrollbar appear/disappear if window resized. */
+		$(window).bind('resize', function() {
+			$cont.css({'max-height': $(window).height()});
+		});
 
 		/* Add search-box to document. */
 		$cont.appendTo(settings.container.target);
