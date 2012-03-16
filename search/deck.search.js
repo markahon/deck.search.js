@@ -54,7 +54,7 @@
 		input : {
 			id: 'ds_input',
 			styleInactive: {
-				//outline: '1px solid transparent',
+				outline: 'none',
 				width: '3.3em'
 			},
 			styleActive: {
