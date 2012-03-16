@@ -88,10 +88,18 @@
 					var regex = new RegExp(searchString, 'img');
 					$('.slide').each(function(i,n) {
 						var hits = $(this).text().match(regex);
-						if (hits) {
+						if (hits || i === parseInt(searchString, 10)) {
+							var details;
+
+							if (hits) {
+								details = ['(', hits.length, ' hit', (hits.length > 1 ? 's' : ''), ')'].join('');
+							} else {
+								details = '(slide number '+i+')';
+							}
+
 							links.push([
 								'<a id="result', i , '" href="#', this.id ,'">', 'Jump to #', this.id , '</a> ',
-								'<span style="',settings.results.hitsStyle,'">(', hits.length, ' hit', (hits.length > 1 ? 's' : ''), ')</span>',
+								'<span style="', settings.results.hitsStyle,'">', details, '</span>',
 								'<br>'
 								].join('')
 							);
