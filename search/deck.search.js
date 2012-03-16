@@ -214,6 +214,13 @@
 				$input.removeAttr('placeholder');
 				$input.focus();
 			}
+		})
+		/* Empty search if clicked outside search container. */
+		.bind('click', function(event) {
+			if (!$(event.target).closest('#'+settings.container.id).length) {
+				$input.val('').trigger('click');
+				$cont.trigger('focusout');
+			}
 		});
 		
 
