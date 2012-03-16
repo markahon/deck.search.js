@@ -2,6 +2,12 @@
 
 Simple extension for [deck.js][] to search content from the slides.
 
+## Features
+
+* Search by text
+* Search by slide number
+* Navigate search results by mouse or keyboard
+
 ## Requirements ##
 
 * Well, [deck.js][]
