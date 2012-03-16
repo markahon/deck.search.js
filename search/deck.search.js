@@ -11,23 +11,37 @@
 	var defaults = {
 		useGo: true,
 		container : {
-			target: '.deck-container',
+			target: 'body',
 			id: 'ds_container',
-			style: {
+			styleDefault: {
 				position: 'fixed',
-				top: '0.2em',
+				top: '0',
 				/* top right corner would be nicer, but it messes up the $.deck display */
-				left: '0.2em',
-				background: '#fff',
-				border: '1px solid #aaa',
-				padding: '0.6em',
+				left: '0',
+				background: 'none',
+				border: 'none',
+				padding: '0.4em',
 				'font-size': '12pt',
 				'z-index': '10'
+			},
+			styleWithResults : {
+				background: '#fff',
+				border: '1px solid #aaa',
+				'border-left': 'none',
+				'border-top': 'none'
 			}
 		},
 		input : {
 			id: 'ds_input',
-			hint: "Press ' f ' to search"
+			hint: "Hint: shortcut = ' f '",
+			styleInactive: {
+				//outline: '1px solid transparent',
+				width: '2.1em'
+			},
+			styleActive: {
+				outline: 'none',
+				width: 'auto'
+			}
 		},
 		results : {
 			id: 'ds_results',
@@ -68,11 +82,25 @@
 
 
 		/* Init container. */
-		$cont = $('<div id="'+settings.container.id+'" />').css(settings.container.style);
+		$cont = $('<div id="'+settings.container.id+'" />')
+			.css(settings.container.styleDefault)
+			.bind('focusin', function() {
+				$input.css(settings.input.styleActive);
+			})
+			.bind('focusout', function() {
+				$input.removeAttr('placeholder');
+					//.attr('placeholder', settings.input.hint)
+				if (!$results.html()) {
+					$input.css(settings.input.styleInactive);
+					$cont.css(settings.container.styleDefault);
+				}
+			});
+		
 
 
 		/* Init search box. */
 		$input = $('<input id="'+settings.input.id+'" type="search" results="5" autocomplete="on" placeholder="'+settings.input.hint+'" />')
+			.css(settings.input.styleInactive)
 			/* Handle events related to search-field. */
 			.bind('keyup keydown keypress', function(event) {
 				/* Stop event propagation from the search box not to get mixed with normal deck navigation. */
@@ -100,25 +128,31 @@
 							}
 
 							links.push([
-								'<a id="result', i , '" href="#', this.id ,'">', 'Jump to #', this.id , '</a> ',
+								'<a id="result', i , '" href="#', this.id ,'">', '#', this.id , '</a> ',
 								'<span style="', settings.results.hitsStyle,'">', details, '</span>',
 								'<br>'
 								].join('')
 							);
 						}
 					});
+
+					if (!links.length) {
+						links.push('(no results)');
+					}
 				}
-				$results.html(links.join(''));
+				var resultsHTML = links.join('');
+				$cont.css(resultsHTML ? settings.container.styleWithResults : settings.container.styleDefault);
+				$results.html(resultsHTML);
 
 				/* Navigate to first search result. (Default = ENTER) */
 				var key = event.keyCode || event.which;
 				if (key === settings.keys.navigateToResult) {
-				  $results.find('a:first').click();
+					$results.find('a:first').click();
 				}
 				
 				/* Blur the search field to allow normal keyboard navigation. (Default = ESC) */
 				else if (key === settings.keys.blurSearch) {
-				  $(this).blur();
+					$(this).blur();
 				}
 			})
 			/* Empty results, when the "empty this input" -icon in search field is clicked. */
@@ -127,12 +161,6 @@
 					$results.empty();
 				}
 			})
-			.bind('focus', function() {
-				$(this).removeAttr('placeholder');
-			})
-			.bind('blur', function() {
-				$(this).attr('placeholder', settings.input.hint);
-			})
 			.appendTo($cont);
 
 
@@ -140,6 +168,7 @@
 		$d.bind('keyup.decksearch', function() {
 			var key = event.keyCode || event.which;
 			if (key === settings.keys.focusSearch) {
+				$input.removeAttr('placeholder');
 				$input.focus();
 			}
 		});
@@ -149,7 +178,6 @@
 		/* Init results list. */
 		$results = $('<div id="'+settings.results.id+'" />')
 			.delegate('a', 'click', function() {
-				console.log('click ', this);
 				if (settings.useGo) {
 					// Navigate the deck when clicking on result-link using the deck.core 'go'-function.
 					// It seems, that without 'go' the page can get messed up more easily in some slideshows?
@@ -179,6 +207,14 @@
 				$(this).click();
 				return false;
 			})
+			/* Hide results if ESC is pressed when focused on results. */
+			.bind('keyup', function() {
+				var key = event.keyCode || event.which;	
+				if (key === settings.keys.blurSearch) {
+					$input.val('').trigger('click');
+					$cont.trigger('focusout');
+				}
+			})
 			.appendTo($cont);
 
 
@@ -196,7 +232,7 @@
 
 	$(function() {
 		// Pick same font-family as used in slide titles.
-		$.extend(true, $.deck.defaults.search.container.style, {'font-family' : $('.slide:first').css('font-family')});
+		$.extend(true, $.deck.defaults.search.container.styleDefault, {'font-family' : $('.slide:first').css('font-family')});
 	});
 	
 })(jQuery, 'deck');
